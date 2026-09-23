@@ -102,6 +102,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\Br00W\source\repos\Battleship\GameLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,6 +125,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GameFieldLib\GameFieldLib.vcxproj">
+      <Project>{8f4737e0-fdbe-486c-a211-a7db04ab267e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\GameLib\GameLib.vcxproj">
+      <Project>{e65a2da8-bc8f-4ff8-9c0a-6e2bdabdc69f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\PlayerLib\PlayerLib.vcxproj">
+      <Project>{b1dc4696-6e62-48a4-82d7-9a097f2ee67d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\PositionLib\PositionLib.vcxproj">
+      <Project>{4dc8856d-6d43-4dd3-9c5a-197086d54a9c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ShipLib\ShipLib.vcxproj">
+      <Project>{bb348e88-b8f6-47a4-b11e-d7b042b7cb52}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
