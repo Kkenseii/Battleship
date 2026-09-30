@@ -47,7 +47,7 @@ Player::Player() noexcept : _gamefield() {
 }
 
 void Player::set_ship(const Ship& ship) {
-    int size = ship.size();
+    int size = ship.get_size();
     if (size < 1 || size > 4) {
         throw std::logic_error("Invalid input: incorrect field");
     }
@@ -55,9 +55,9 @@ void Player::set_ship(const Ship& ship) {
         throw std::logic_error("Invalid input: incorrect field");
     }
 
-    int row = ship.row();
-    int col = ship.col();
-    Direction dir = ship.direction();
+    int row = ship.get_row();
+    int col = ship.get_col();
+    Direction dir = ship.get_direction();
 
     int rowEnd = row + (dir == Vertical ? size - 1 : 0);
     int colEnd = col + (dir == Horizontal ? size - 1 : 0);

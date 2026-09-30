@@ -19,10 +19,10 @@ public:
     Ship() = delete;
     Ship(const Ship&) = delete;
 
-    int size() const noexcept;
-    Direction direction() const noexcept;
-    int row() const noexcept;
-    int col() const noexcept;
+    int get_size() const noexcept;
+    Direction get_direction() const noexcept;
+    int get_row() const noexcept;
+    int get_col() const noexcept;
 
     void rotate();
 

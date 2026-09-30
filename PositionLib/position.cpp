@@ -1,22 +1,22 @@
 #include "Position.h"
 #include <stdexcept>
 
-int Position::row() const noexcept {
+int Position::get_row() const noexcept {
     return _row;
 }
 
-int Position::col() const noexcept {
+int Position::get_col() const noexcept {
     return _col;
 }
 
-void Position::row(int row) {
+void Position::set_row(int row) {
     if (row < 1 || row > _max_row) {
         throw std::logic_error("Invalid input: incorrect position");
     }
     _row = row;
 }
 
-void Position::col(int col) {
+void Position::set_col(int col) {
     if (col < 1 || col > _max_col) {
         throw std::logic_error("Invalid input: incorrect position");
     }

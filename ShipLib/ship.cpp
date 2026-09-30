@@ -4,10 +4,10 @@
 bool Ship::is_collision(int size, const Position& coord, Direction dir) noexcept {
     if (size < 1 || size > 4) return true;
     if (dir == Horizontal) {
-        if (coord.col() + size - 1 > 10) return true;
+        if (coord.get_col() + size - 1 > 10) return true;
     }
     else {
-        if (coord.row() + size - 1 > 10) return true;
+        if (coord.get_row() + size - 1 > 10) return true;
     }
     return false;
 }
@@ -64,20 +64,20 @@ Ship::Ship(int size, char direction, int row, char col) {
     _direction = dir;
 }
 
-int Ship::size() const noexcept {
+int Ship::get_size() const noexcept {
     return _size;
 }
 
-Direction Ship::direction() const noexcept {
+Direction Ship::get_direction() const noexcept {
     return _direction;
 }
 
-int Ship::row() const noexcept {
-    return _coord.row();
+int Ship::get_row() const noexcept {
+    return _coord.get_row();
 }
 
-int Ship::col() const noexcept {
-    return _coord.col();
+int Ship::get_col() const noexcept {
+    return _coord.get_col();
 }
 
 void Ship::rotate() {

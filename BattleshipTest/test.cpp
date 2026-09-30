@@ -16,14 +16,14 @@
 
 TEST(PositionTest, DefaultConstructor_IsTopLeftCorner) {
     Position pos;
-    EXPECT_EQ(pos.row(), 1);
-    EXPECT_EQ(pos.col(), 1);
+    EXPECT_EQ(pos.get_row(), 1);
+    EXPECT_EQ(pos.get_col(), 1);
 }
 
 TEST(PositionTest, ParamConstructor_ValidValues) {
     Position pos(5, 7);
-    EXPECT_EQ(pos.row(), 5);
-    EXPECT_EQ(pos.col(), 7);
+    EXPECT_EQ(pos.get_row(), 5);
+    EXPECT_EQ(pos.get_col(), 7);
 }
 
 TEST(PositionTest, ParamConstructor_RowTooLow_Throws) {
@@ -50,20 +50,20 @@ TEST(PositionTest, ParamConstructor_BoundaryValuesAreValid) {
 TEST(PositionTest, CopyConstructor_CopiesValues) {
     Position original(3, 9);
     Position copy(original);
-    EXPECT_EQ(copy.row(), 3);
-    EXPECT_EQ(copy.col(), 9);
+    EXPECT_EQ(copy.get_row(), 3);
+    EXPECT_EQ(copy.get_col(), 9);
 }
 
 TEST(PositionTest, StringConstructor_ValidFormat) {
     Position pos("(3, 4)");
-    EXPECT_EQ(pos.row(), 3);
-    EXPECT_EQ(pos.col(), 4);
+    EXPECT_EQ(pos.get_row(), 3);
+    EXPECT_EQ(pos.get_col(), 4);
 }
 
 TEST(PositionTest, StringConstructor_TrimsWhitespace) {
     Position pos("(  6 ,   2 )");
-    EXPECT_EQ(pos.row(), 6);
-    EXPECT_EQ(pos.col(), 2);
+    EXPECT_EQ(pos.get_row(), 6);
+    EXPECT_EQ(pos.get_col(), 2);
 }
 
 TEST(PositionTest, StringConstructor_MissingParenthesis_Throws) {
@@ -84,26 +84,26 @@ TEST(PositionTest, StringConstructor_NonNumeric_Throws) {
 
 TEST(PositionTest, RowSetter_ValidValue) {
     Position pos;
-    pos.row(8);
-    EXPECT_EQ(pos.row(), 8);
+    pos.set_row(8);
+    EXPECT_EQ(pos.get_row(), 8);
 }
 
 TEST(PositionTest, RowSetter_InvalidValue_Throws) {
     Position pos;
-    EXPECT_THROW(pos.row(0), std::logic_error);
-    EXPECT_THROW(pos.row(11), std::logic_error);
+    EXPECT_THROW(pos.set_row(0), std::logic_error);
+    EXPECT_THROW(pos.set_row(11), std::logic_error);
 }
 
 TEST(PositionTest, ColSetter_ValidValue) {
     Position pos;
-    pos.col(6);
-    EXPECT_EQ(pos.col(), 6);
+    pos.set_col(6);
+    EXPECT_EQ(pos.get_col(), 6);
 }
 
 TEST(PositionTest, ColSetter_InvalidValue_Throws) {
     Position pos;
-    EXPECT_THROW(pos.col(0), std::logic_error);
-    EXPECT_THROW(pos.col(11), std::logic_error);
+    EXPECT_THROW(pos.set_col(0), std::logic_error);
+    EXPECT_THROW(pos.set_col(11), std::logic_error);
 }
 
 TEST(PositionTest, ToString_FormatsCorrectly) {
@@ -118,8 +118,8 @@ TEST(PositionTest, ToString_DoubleDigitValues) {
 
 TEST(PositionTest, Parse_FriendFunction_Works) {
     Position pos = parse("(2, 9)");
-    EXPECT_EQ(pos.row(), 2);
-    EXPECT_EQ(pos.col(), 9);
+    EXPECT_EQ(pos.get_row(), 2);
+    EXPECT_EQ(pos.get_col(), 9);
 }
 
 TEST(PositionTest, Parse_InvalidString_Throws) {
@@ -129,8 +129,8 @@ TEST(PositionTest, Parse_InvalidString_Throws) {
 TEST(PositionTest, ToString_ParseRoundTrip) {
     Position original(4, 8);
     Position roundTripped = parse(to_string(original));
-    EXPECT_EQ(roundTripped.row(), original.row());
-    EXPECT_EQ(roundTripped.col(), original.col());
+    EXPECT_EQ(roundTripped.get_row(), original.get_row());
+    EXPECT_EQ(roundTripped.get_col(), original.get_col());
 }
 
 //Gamefield
@@ -285,15 +285,15 @@ TEST(GameFieldTest, ToStringHide_ShowsShipsWhenFalse) {
 
 TEST(ShipTest, Constructor_ValidHorizontalShip) {
     Ship ship(3, Position(4, 3), Horizontal);
-    EXPECT_EQ(ship.size(), 3);
-    EXPECT_EQ(ship.direction(), Horizontal);
-    EXPECT_EQ(ship.row(), 4);
-    EXPECT_EQ(ship.col(), 3);
+    EXPECT_EQ(ship.get_size(), 3);
+    EXPECT_EQ(ship.get_direction(), Horizontal);
+    EXPECT_EQ(ship.get_row(), 4);
+    EXPECT_EQ(ship.get_col(), 3);
 }
 
 TEST(ShipTest, Constructor_ValidVerticalShip) {
     Ship ship(2, Position(5, 5), Vertical);
-    EXPECT_EQ(ship.direction(), Vertical);
+    EXPECT_EQ(ship.get_direction(), Vertical);
 }
 
 TEST(ShipTest, Constructor_SizeTooSmall_Throws) {
@@ -319,7 +319,7 @@ TEST(ShipTest, Constructor_BoundaryFitsExactly) {
 
 TEST(ShipTest, PartialConstructor_DefaultsToHorizontal) {
     Ship ship(3, Position(2, 2));
-    EXPECT_EQ(ship.direction(), Horizontal);
+    EXPECT_EQ(ship.get_direction(), Horizontal);
 }
 
 TEST(ShipTest, PartialConstructor_OutOfBounds_Throws) {
@@ -328,17 +328,17 @@ TEST(ShipTest, PartialConstructor_OutOfBounds_Throws) {
 
 TEST(ShipTest, CharConstructor_UppercaseHorizontal) {
     Ship ship(3, 'H', 4, 'C');
-    EXPECT_EQ(ship.size(), 3);
-    EXPECT_EQ(ship.direction(), Horizontal);
-    EXPECT_EQ(ship.row(), 4);
-    EXPECT_EQ(ship.col(), 3);
+    EXPECT_EQ(ship.get_size(), 3);
+    EXPECT_EQ(ship.get_direction(), Horizontal);
+    EXPECT_EQ(ship.get_row(), 4);
+    EXPECT_EQ(ship.get_col(), 3);
 }
 
 TEST(ShipTest, CharConstructor_LowercaseVertical) {
     Ship ship(2, 'v', 3, 'b');
-    EXPECT_EQ(ship.direction(), Vertical);
-    EXPECT_EQ(ship.row(), 3);
-    EXPECT_EQ(ship.col(), 2);
+    EXPECT_EQ(ship.get_direction(), Vertical);
+    EXPECT_EQ(ship.get_row(), 3);
+    EXPECT_EQ(ship.get_col(), 2);
 }
 
 TEST(ShipTest, CharConstructor_InvalidDirection_Throws) {
@@ -370,17 +370,17 @@ TEST(ShipTest, CopyConstructor_IsDeleted) {
 TEST(ShipTest, Rotate_TogglesDirection) {
     Ship ship(2, Position(3, 3), Horizontal);
     ship.rotate();
-    EXPECT_EQ(ship.direction(), Vertical);
+    EXPECT_EQ(ship.get_direction(), Vertical);
     ship.rotate();
-    EXPECT_EQ(ship.direction(), Horizontal);
+    EXPECT_EQ(ship.get_direction(), Horizontal);
 }
 
 TEST(ShipTest, Rotate_KeepsPositionAndSize) {
     Ship ship(3, Position(4, 3), Horizontal);
     ship.rotate();
-    EXPECT_EQ(ship.size(), 3);
-    EXPECT_EQ(ship.row(), 4);
-    EXPECT_EQ(ship.col(), 3);
+    EXPECT_EQ(ship.get_size(), 3);
+    EXPECT_EQ(ship.get_row(), 4);
+    EXPECT_EQ(ship.get_col(), 3);
 }
 
 TEST(ShipTest, Rotate_ThrowsWhenResultWouldCollide) {
@@ -395,7 +395,7 @@ TEST(ShipTest, Rotate_DoesNotChangeDirectionOnFailedRotation) {
     }
     catch (const std::logic_error&) {
     }
-    EXPECT_EQ(ship.direction(), Horizontal);
+    EXPECT_EQ(ship.get_direction(), Horizontal);
 }
 
 namespace {
