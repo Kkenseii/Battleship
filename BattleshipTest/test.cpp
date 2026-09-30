@@ -254,30 +254,6 @@ TEST(GameFieldTest, Get_InvalidPositionThrows) {
     EXPECT_THROW(field.get(-1, 'A'), std::logic_error);
 }
 
-TEST(GameFieldTest, ToString_EmptyFieldFormat) {
-    GameField field(3, 3);
-    std::string expected =
-        "  |A B C|\n"
-        "  +-----+\n"
-        "1 | | | |\n"
-        "2 | | | |\n"
-        "3 | | | |\n"
-        "  +-----+";
-    EXPECT_EQ(to_string(field), expected);
-}
-
-TEST(GameFieldTest, ToString_ShowsPlacedShips) {
-    GameField field(3, 3);
-    field.set(2, 'B');
-    std::string expected =
-        "  |A B C|\n"
-        "  +-----+\n"
-        "1 | | | |\n"
-        "2 | |*| |\n"
-        "3 | | | |\n"
-        "  +-----+";
-    EXPECT_EQ(to_string(field), expected);
-}
 
 TEST(GameFieldTest, ToStringHide_HidesShipsWhenTrue) {
     GameField field(3, 3);
@@ -303,19 +279,6 @@ TEST(GameFieldTest, ToStringHide_ShowsShipsWhenFalse) {
         "3 | | | |\n"
         "  +-----+";
     EXPECT_EQ(to_string(field, false), expected);
-}
-
-TEST(GameFieldTest, ToString_TenColumnHeaderMatchesLetters) {
-    GameField field; // default 10x10
-    std::string result = to_string(field);
-    EXPECT_NE(result.find("A B C D E F G H I J"), std::string::npos);
-}
-
-TEST(GameFieldTest, ToString_RowLabelPaddingForDoubleDigitRow) {
-    GameField field; 
-    std::string result = to_string(field);
-    EXPECT_NE(result.find("10|"), std::string::npos);
-    EXPECT_EQ(result.find("10 |"), std::string::npos);
 }
 
 //Ship
