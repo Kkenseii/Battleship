@@ -16,7 +16,7 @@ class Player {
     static char num_to_col(int c) noexcept;
     bool is_ship_cell(int row, int col) const;
 
-    int sunk_ship_size(int row, int col) const;
+    int check_destroy_ship(int row, int col) const;
 
 public:
     Player() noexcept;

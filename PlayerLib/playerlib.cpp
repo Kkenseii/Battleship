@@ -16,7 +16,7 @@ bool Player::is_ship_cell(int row, int col) const {
     return (c == '*' || c == 'X');
 }
 
-int Player::sunk_ship_size(int row, int col) const {
+int Player::check_destroy_ship(int row, int col) const {
     int left = col, right = col;
     while (left > 1 && is_ship_cell(row, left - 1)) --left;
     while (right < 10 && is_ship_cell(row, right + 1)) ++right;
@@ -112,7 +112,7 @@ State Player::set_action(int row, char col) {
     if (upperCol >= 'a' && upperCol <= 'z') upperCol = static_cast<char>(upperCol - 'a' + 'A');
     int colNum = upperCol - 'A' + 1;
 
-    int sunkSize = sunk_ship_size(row, colNum);
+    int sunkSize = check_destroy_ship(row, colNum);
     if (sunkSize == 0) {
         return State::Hit;
     }

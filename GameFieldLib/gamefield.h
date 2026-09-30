@@ -25,7 +25,7 @@ public:
     GameField(char** field, int n, int m);
     GameField(int n, int m);
     GameField(const GameField& other);
-    ~GameField() noexcept;
+    ~GameField();
 
     void set(int row, char col);
     char get(int row, char col) const;

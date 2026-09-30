@@ -73,7 +73,7 @@ GameField::GameField(const GameField& other) : _field(nullptr), _n(other._n), _m
     copy_field(other._field);
 }
 
-GameField::~GameField() noexcept {
+GameField::~GameField(){
     free_field();
 }
 
