@@ -1,11 +1,11 @@
 #include "Position.h"
 #include <stdexcept>
 
-int Position::get_row() const noexcept {
+inline int Position::get_row() const noexcept {
     return _row;
 }
 
-int Position::get_col() const noexcept {
+inline int Position::get_col() const noexcept {
     return _col;
 }
 
