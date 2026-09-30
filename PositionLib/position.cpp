@@ -1,13 +1,7 @@
 #include "Position.h"
 #include <stdexcept>
 
-inline int Position::get_row() const noexcept {
-    return _row;
-}
 
-inline int Position::get_col() const noexcept {
-    return _col;
-}
 
 void Position::set_row(int row) {
     if (row < 1 || row > _max_row) {

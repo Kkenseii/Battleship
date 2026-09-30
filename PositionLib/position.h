@@ -8,8 +8,12 @@ class Position {
     static const int _max_col = 10;
 
 public:
-    inline int get_row() const noexcept;
-    inline int get_col() const noexcept;
+    inline int get_row() const noexcept {
+        return _row;
+    }
+    int get_col() const noexcept {
+        return _col;
+    }
 
     void set_row(int row);
     void set_col(int col);

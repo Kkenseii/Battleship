@@ -127,9 +127,6 @@
     <ClInclude Include="gamelib.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BattleshipLib\BattleshipLib.vcxproj">
-      <Project>{5b431b18-1552-480f-9b33-c38d7c9a5d9f}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\GameFieldLib\GameFieldLib.vcxproj">
       <Project>{8f4737e0-fdbe-486c-a211-a7db04ab267e}</Project>
     </ProjectReference>
