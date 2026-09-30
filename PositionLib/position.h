@@ -1,7 +1,5 @@
 #pragma once
-
 #include <string>
-#include <stdexcept>
 
 class Position {
     int _row;
@@ -10,23 +8,22 @@ class Position {
     static const int _max_col = 10;
 
 public:
-    inline int row() const noexcept {
+    inline int get_row() const noexcept {
         return _row;
     }
-
-    inline int col() const noexcept {
+    int get_col() const noexcept {
         return _col;
     }
 
-    void row(int);
-    void col(int);
+    void set_row(int row);
+    void set_col(int col);
 
     Position();
-    Position(int, int);
+    Position(int row, int col);
     Position(const Position& other);
     Position(const std::string& str);
 
     friend std::string to_string(const Position& pos);
     friend Position parse(const std::string& str);
-};
 
+};

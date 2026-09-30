@@ -1,38 +1,97 @@
-#include "gamelib.h"
+#include "../GameLib/gamelib.h"
+#include "Ship.h"
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 
-Game::Game() : _user(), _computer() {}
+void Game::ai_target(int index, int& row, int& col) noexcept {
+    if (index < 10) {
+        row = index + 1;
+        col = index + 1;
+        return;
+    }
+    index -= 10;
+    if (index < 10) {
+        row = index + 1;
+        col = 10 - index;
+        return;
+    }
+    index -= 10;
+    int count = 0;
+    for (int r = 1; r <= 10; ++r) {
+        for (int c = 1; c <= 10; ++c) {
+            if (r == c) continue;
+            if (c == 11 - r) continue;
+            if (count == index) {
+                row = r;
+                col = c;
+                return;
+            }
+            ++count;
+        }
+    }
+    row = 1;
+    col = 1;
+}
 
-void Game::parse_field(Player& p, const std::string& input) {
-    std::istringstream iss(input);
+bool Game::continues(State state) noexcept {
+    return state == State::Hit ||
+        state == State::BoatDestroyed ||
+        state == State::DestroyersDestroyed ||
+        state == State::CruisersDestroyed ||
+        state == State::BattleshipDestroyed;
+}
+
+void Game::user_init(std::string input) {
+    std::istringstream stream(input);
     std::string line;
-    while (std::getline(iss, line)) {
+    bool any = false;
+    while (std::getline(stream, line)) {
         if (line.empty()) continue;
         std::istringstream ls(line);
-        int size, row;
-        char direction, col;
-        if (!(ls >> size >> direction >> row >> col)) continue;
-        Ship ship(size, direction, row, col);
-        p.set_ship(ship);
+        int size;
+        char dir;
+        int row;
+        char col;
+        if (!(ls >> size >> dir >> row >> col)) {
+            throw std::logic_error("Invalid input: incorrect field");
+        }
+        Ship ship(size, dir, row, col);
+        _user.set_ship(ship);
+        any = true;
     }
-    if (!p.check_ready()) {
+    if (!any || !_user.check_ready()) {
         throw std::logic_error("Invalid input: incorrect field");
     }
 }
 
-void Game::user_init(const std::string& input) {
-    parse_field(_user, input);
+void Game::computer_init(std::string input) {
+    std::istringstream stream(input);
+    std::string line;
+    bool any = false;
+    while (std::getline(stream, line)) {
+        if (line.empty()) continue;
+        std::istringstream ls(line);
+        int size;
+        char dir;
+        int row;
+        char col;
+        if (!(ls >> size >> dir >> row >> col)) {
+            throw std::logic_error("Invalid input: incorrect field");
+        }
+        Ship ship(size, dir, row, col);
+        _computer.set_ship(ship);
+        any = true;
+    }
+    if (!any || !_computer.check_ready()) {
+        throw std::logic_error("Invalid input: incorrect field");
+    }
 }
 
-void Game::computer_init(const std::string& input) {
-    parse_field(_computer, input);
-}
-
-State Game::user_move(const std::string& input) {
+State Game::user_move(std::string input) {
     std::istringstream iss(input);
-    char col;
     int row;
+    char col;
     if (!(iss >> row >> col)) {
         throw std::logic_error("Invalid input: incorrect move");
     }
@@ -40,45 +99,21 @@ State Game::user_move(const std::string& input) {
 }
 
 State Game::computer_move() {
-    int n = _user.field().rows();
-    int m = _user.field().cols();
-
-    // 1. Левая диагональ
-    for (int i = 1; i <= n && i <= m; ++i) {
-        char ch = _user.field().get_raw(i, i);
-        if (ch == ' ' || ch == '*') {
-            return _user.set_action(i, char('A' + i - 1));
-        }
+    if (_ai_move_count >= 100) {
+        throw std::logic_error("Invalid input: incorrect move");
     }
-
-    // 2. Правая (побочная) диагональ
-    for (int i = 1; i <= n && i <= m; ++i) {
-        int r = i;
-        int c = m - i + 1;
-        char ch = _user.field().get_raw(r, c);
-        if (ch == ' ' || ch == '*') {
-            return _user.set_action(r, char('A' + c - 1));
-        }
-    }
-
-    // 3. Построчно
-    for (int r = 1; r <= n; ++r) {
-        for (int c = 1; c <= m; ++c) {
-            char ch = _user.field().get_raw(r, c);
-            if (ch == ' ' || ch == '*') {
-                return _user.set_action(r, char('A' + c - 1));
-            }
-        }
-    }
-
-    throw std::logic_error("Invalid input: incorrect move");
+    int row, colNum;
+    ai_target(_ai_move_count, row, colNum);
+    ++_ai_move_count;
+    char col = static_cast<char>('A' + colNum - 1);
+    return _user.set_action(row, col);
 }
 
-bool Game::is_end() {
+bool Game::is_end() const noexcept {
     return _user.check_lose() || _computer.check_lose();
 }
 
-void Game::show_game_window() {
+void Game::show_game_window() const {
     std::cout << "= COMPUTER GAME FIELD =\n\n";
     _computer.show_field(true);
     std::cout << "\n=== YOUR PLAY FIELD ===\n\n";
@@ -86,52 +121,47 @@ void Game::show_game_window() {
 }
 
 void Game::start() {
-    std::string user_input, computer_input, line;
+    std::string block, line;
 
-    // Блок пользователя
-    while (std::getline(std::cin, line)) {
-        if (line.empty()) break;
-        user_input += line + "\n";
+    block.clear();
+    while (std::getline(std::cin, line) && !line.empty()) {
+        if (!block.empty()) block += "\n";
+        block += line;
     }
+    user_init(block);
 
-    // Блок компьютера
-    while (std::getline(std::cin, line)) {
-        if (line.empty()) break;
-        computer_input += line + "\n";
+    block.clear();
+    while (std::getline(std::cin, line) && !line.empty()) {
+        if (!block.empty()) block += "\n";
+        block += line;
     }
-
-    user_init(user_input);
-    computer_init(computer_input);
+    computer_init(block);
 
     show_game_window();
 
     while (!is_end()) {
-        // Ход пользователя
-        bool user_hit = true;
-        while (user_hit && !is_end()) {
-            std::string move_line;
-            if (!std::getline(std::cin, move_line)) break;
-            if (move_line.empty()) continue;
-            State st = user_move(move_line);
-            user_hit = (st != Missed);
-        }
+        State userResult;
+        do {
+            if (!std::getline(std::cin, line)) {
+                throw std::logic_error("Invalid input: incorrect move");
+            }
+            userResult = user_move(line);
+        } while (!is_end() && continues(userResult));
 
         if (is_end()) break;
 
-        // Ход компьютера
-        bool comp_hit = true;
-        while (comp_hit && !is_end()) {
-            State st = computer_move();
-            comp_hit = (st != Missed);
-        }
+        State compResult;
+        do {
+            compResult = computer_move();
+        } while (!is_end() && continues(compResult));
     }
 
     show_game_window();
 
     if (_computer.check_lose()) {
-        std::cout << "\nUSER WIN!\n";
+        std::cout << "USER WIN!" << std::endl;
     }
     else {
-        std::cout << "\nCOMPUTER WIN!\n";
+        std::cout << "COMPUTER WIN!" << std::endl;
     }
 }

@@ -1,13 +1,16 @@
-#include "position.h"
+#include "Position.h"
+#include <stdexcept>
 
-void Position::row(int row) {
+
+
+void Position::set_row(int row) {
     if (row < 1 || row > _max_row) {
         throw std::logic_error("Invalid input: incorrect position");
     }
     _row = row;
 }
 
-void Position::col(int col) {
+void Position::set_col(int col) {
     if (col < 1 || col > _max_col) {
         throw std::logic_error("Invalid input: incorrect position");
     }
@@ -37,8 +40,7 @@ Position parse(const std::string& str) {
     size_t comma = str.find(',');
     size_t closeBracket = str.find(')');
 
-    if (openBracket == std::string::npos || comma == std::string::npos
-        || closeBracket == std::string::npos) {
+    if (openBracket == std::string::npos || comma == std::string::npos || closeBracket == std::string::npos) {
         throw std::logic_error("Invalid input: incorrect position");
     }
 
@@ -50,8 +52,15 @@ Position parse(const std::string& str) {
     colStr.erase(0, colStr.find_first_not_of(" \t"));
     colStr.erase(colStr.find_last_not_of(" \t") + 1);
 
-    int row = std::stoi(rowStr);
-    int col = std::stoi(colStr);
+    int row;
+    int col;
+    try {
+        row = std::stoi(rowStr);
+        col = std::stoi(colStr);
+    }
+    catch (...) {
+        throw std::logic_error("Invalid input: incorrect position");
+    }
 
     return Position(row, col);
 }

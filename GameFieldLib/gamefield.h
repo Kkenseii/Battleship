@@ -1,38 +1,35 @@
 #pragma once
 #include <string>
-#include "ship.h"
 
-enum State {
-    Missed,
-    BoatDestroyed,
-    DestroyersDestroyed,
-    CruisersDestroyed,
-    BattleshipDestroyed,
-    Hit
-};
 
 class GameField {
     char** _field;
     const int _n;
     const int _m;
 
-    void alloc();
-    void check(int, char) const;
+    void init_field();
+    void copy_field(char* const* src);
+    void free_field() noexcept;
+
+    static void check_size(int n, int m);
+    static int col_to_index(char col);
+
+    void mark(int row, char col, char symbol);
+
+    static std::string render(const GameField& field, bool hide_ships, bool use_hide);
+
+    friend class Player;
 
 public:
     GameField();
-    GameField(int, int);
-    GameField(int);
-    GameField(const GameField&);
+    GameField(char** field, int n, int m);
+    GameField(int n, int m);
+    GameField(const GameField& other);
     ~GameField();
 
-    void set(const Ship&);
-    State set(int, char);
+    void set(int row, char col);
+    char get(int row, char col) const;
 
-    int rows() const;
-    int cols() const;
+    friend std::string to_string(const GameField& field, bool hide_ships);
 
-    friend std::string to_string(const GameField&, bool);
 };
-
-std::string to_string(const GameField&, bool hide_ships = false);

@@ -1,23 +1,28 @@
-#pragma once
-
+﻿#pragma once
+#include "../PlayerLib/playerlib.h"
 #include <string>
-#include "playerlib.h"
+
 
 class Game {
     Player _user;
     Player _computer;
 
-    void parse_field(Player& p, const std::string& input);
-    void user_init(const std::string& input);
-    void computer_init(const std::string& input);
+    int _ai_move_count = 0;
 
-    State user_move(const std::string& input);
+    static void ai_target(int index, int& row, int& col) noexcept;
+    static bool continues(State state) noexcept;
+
+    void user_init(std::string input);
+    void computer_init(std::string input);
+
+    State user_move(std::string input);
     State computer_move();
 
-    bool is_end();
-    void show_game_window();
+    bool is_end() const noexcept;
+    void show_game_window() const;
 
 public:
-    Game();
+    Game() = default;
+
     void start();
 };
